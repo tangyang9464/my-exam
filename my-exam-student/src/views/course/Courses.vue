@@ -68,9 +68,6 @@
                                 </a-typography-text>
 
                                 <a-modal v-model:visible="createRoomVisible" @ok="createRoom()">
-                                    <!-- <a-typography-title :level="5" v-if="classCode!=''">
-                                        分享你的课堂暗号：{{classCode}}
-                                    </a-typography-title> -->
                                     <div>
                                         <a-typography-title :level="5">
                                             课程
@@ -178,7 +175,7 @@ export default {
             role: "0",
             course: "",
             schoolClass: "",
-            editRoomId:'',
+            editRoomId:null,
         };
     },
     methods: {

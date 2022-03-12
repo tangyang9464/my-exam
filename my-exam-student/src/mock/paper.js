@@ -10,7 +10,7 @@ Mock.mock('/api/paper/detail/1', { //输出数据
             {
                 'stem':'本题要求实现一个计算m~n（m<n）之间所有整数的和的简单函数。',
                 'questionType': 'singleChoice',
-                'options':['串长度相等即可','串长度任意','个位置任意','均相等'],
+                'options':['即串长度相等可','串长度任意','个位置任意','均相等'],
                 'score':3
             },
             {

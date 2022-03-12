@@ -5,88 +5,119 @@
                 <a-row type="flex" align="right" :gutter="20">
                     <a-col>
                         <PlusSquareOutlined />
-                        <a-typography-text type="primary">
+                        <a-typography-text type="primary" @click="showModal">
                             新建试卷
                         </a-typography-text>
+                        <a-modal v-model:visible="createMetaPaperVisible" @ok="createMetaPaper()">
+                            <div>
+                                <a-typography-title :level="5">
+                                    试卷名称
+                                </a-typography-title>
+                                <a-input v-model:value="metaPaperObj.paperName" />
+                            </div>
+                        </a-modal>
                     </a-col>
                 </a-row>
             </a-layout-header>
 
             <a-layout-content style="padding:0 25px">
-                <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="metaPapers.length==0"/>
+                <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="metaPapers.length==0" />
                 <a-row type="flex" :gutter="20">
                     <a-col v-for="paper,key in metaPapers" :key="key">
-                        <router-link to="metaPaperDetail">
-                            <a-card hoverable style="width: 300px;margin-bottom: 50px;">
+                        <a-card hoverable style="width: 300px;margin-bottom: 50px;">
 
-                                <a-row type="flex" justify="center" align="middle">
-                                    <a-col>
-                                        <a-typography-title :level="4">{{paper.paperName}}</a-typography-title>
-                                    </a-col>
-                                </a-row>
+                            <a-row type="flex" justify="center" align="middle">
+                                <a-col>
+                                    <a-typography-title :level="4">{{paper.paperName}}</a-typography-title>
+                                </a-col>
+                            </a-row>
 
-                                <a-row type="flex" justify="center" align="middle" class="my-bottom">
-                                    <a-col>
-                                        <a-typography-text type="secondary">满分：</a-typography-text>
-                                    </a-col>
-                                    <a-col>
-                                        <a-typography-text type="secondary">{{paper.totalScore}}分</a-typography-text>
-                                    </a-col>
-                                </a-row>
-                                <a-row type="flex" justify="center" align="middle" class="my-bottom">
-                                    <a-col>
-                                        <a-typography-text type="secondary">共{{paper.questionNumber}}题</a-typography-text>
-                                    </a-col>
-                                </a-row>
-                                <a-row type="flex" justify="center" align="middle" class="my-bottom">
+                            <a-row type="flex" justify="center" align="middle" class="my-bottom">
+                                <a-col>
+                                    <a-typography-text type="secondary">满分：</a-typography-text>
+                                </a-col>
+                                <a-col>
+                                    <a-typography-text type="secondary">{{paper.totalScore}}分</a-typography-text>
+                                </a-col>
+                            </a-row>
+                            <a-row type="flex" justify="center" align="middle" class="my-bottom">
+                                <a-col>
+                                    <a-typography-text type="secondary">共{{paper.questionNumber}}题</a-typography-text>
+                                </a-col>
+                            </a-row>
+                            <!-- <a-row type="flex" justify="center" align="middle" class="my-bottom">
                                     <a-col>
                                         <a-typography-text type="secondary">限时：{{paper.totalTime/60}}分</a-typography-text>
                                     </a-col>
-                                </a-row>
-                                <a-row type="flex" justify="center" align="middle" class="my-bottom">
-                                    <a-col>
-                                        <a-typography-text type="secondary">创建时间：{{dataFormat(paper.createTime)}}</a-typography-text>
-                                    </a-col>
-                                </a-row>
-                                <a-row type="flex" justify="center" align="middle" class="my-bottom">
-                                    <a-col>
-                                        <a-typography-text type="secondary">修改时间：{{dataFormat(paper.updateTime)}}</a-typography-text>
-                                    </a-col>
-                                </a-row>
+                                </a-row> -->
+                            <a-row type="flex" justify="center" align="middle" class="my-bottom">
+                                <a-col>
+                                    <a-typography-text type="secondary">创建时间：{{dataFormat(paper.createTime)}}</a-typography-text>
+                                </a-col>
+                            </a-row>
+                            <a-row type="flex" justify="center" align="middle" class="my-bottom">
+                                <a-col>
+                                    <a-typography-text type="secondary">修改时间：{{dataFormat(paper.updateTime)}}</a-typography-text>
+                                </a-col>
+                            </a-row>
 
-                                <template #actions class="ant-card-actions">
+                            <template #actions class="ant-card-actions">
+                                <router-link :to="'/metaPaperDetail/'+paper.id">
+
                                     <a-tooltip>
                                         <template #title>编辑</template>
                                         <EditOutlined />
                                     </a-tooltip>
+                                </router-link>
 
+                                <a-tooltip>
+                                    <template #title>发布</template>
+                                    <SendOutlined />
+                                </a-tooltip>
+
+                                <a-modal visible="true" title="发布试卷" okText="确认" cancelText="取消">
+                                    <a-form :model="paperInfo" class="login-form" @submit="submit">
+                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发送班级" name="schoolClass">
+                                            <a-select v-model:value="value" mode="multiple" style="width: 100%" placeholder="选择发送班级" :options="publishSchoolClass" @change="handleChange"></a-select>
+                                        </a-form-item>
+                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发布名称" name="examName">
+                                            <a-input ></a-input>
+                                        </a-form-item>
+                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试时长" name="totalTime">
+                                            <a-select v-model:value="value" show-search placeholder="输入或选择时长" style="width: 200px" :options="options" :filter-option="filterOption" @focus="handleFocus" @blur="handleBlur" @change="handleChange"></a-select>
+                                        </a-form-item>
+                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试开始时间" name="examName">
+                                            <a-date-picker show-time placeholder="选择开始时间" @change="onChange" @ok="onOk" />
+                                        </a-form-item>
+                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试截止时间" name="examName">
+                                            <a-date-picker show-time placeholder="选择截止时间" @change="onChange" @ok="onOk" />
+                                        </a-form-item>
+                                    </a-form>
+                                </a-modal>
+
+                                <a-tooltip @click="deleteMetaPaper(paper.id)">
+                                    <template #title>
+                                        删除
+                                    </template>
+                                    <DeleteOutlined />
+                                </a-tooltip>
+
+                                <a-dropdown :trigger="['click']">
                                     <a-tooltip>
-                                        <template #title>发布</template>
-                                        <SendOutlined />
+                                        <template #title></template>
+                                        <EllipsisOutlined />
                                     </a-tooltip>
 
-                                    <a-tooltip>
-                                        <template #title>删除</template>
-                                        <DeleteOutlined />
-                                    </a-tooltip>
-
-                                    <a-dropdown :trigger="['click']">
-                                        <a-tooltip>
-                                            <template #title></template>
-                                            <EllipsisOutlined />
-                                        </a-tooltip>
-
-                                        <template #overlay>
-                                            <a-menu>
-                                                <a-menu-item>
-                                                    <div>重命名</div>
-                                                </a-menu-item>
-                                            </a-menu>
-                                        </template>
-                                    </a-dropdown>
-                                </template>
-                            </a-card>
-                        </router-link>
+                                    <template #overlay>
+                                        <a-menu>
+                                            <a-menu-item>
+                                                <div>重命名</div>
+                                            </a-menu-item>
+                                        </a-menu>
+                                    </template>
+                                </a-dropdown>
+                            </template>
+                        </a-card>
                     </a-col>
                 </a-row>
             </a-layout-content>
@@ -101,9 +132,9 @@ import {
     DeleteOutlined,
     PlusSquareOutlined,
 } from "@ant-design/icons-vue";
-import {getCurrentInstance, onMounted, ref } from "vue";
+import { getCurrentInstance, onMounted, reactive, ref } from "vue";
 import paperApi from "@/api/paper";
-import moment from 'moment'
+import moment from "moment";
 
 export default {
     components: {
@@ -114,13 +145,35 @@ export default {
         PlusSquareOutlined,
     },
     setup() {
-        const {proxy} = getCurrentInstance();
-        // const collapsed = ref(false);
-        // const selectedKeys = ref(["1"]);
+        const { proxy } = getCurrentInstance();
+        const createMetaPaperVisible = ref(false);
         const metaPapers = ref([]);
         const teacherId = proxy.$cookies.get("userId");
+        const metaPaperObj = reactive({
+            teacherId: teacherId,
+        });
 
-        onMounted(() => {
+        const showModal = () => {
+            createMetaPaperVisible.value = true;
+        };
+
+        const createMetaPaper = () => {
+            paperApi
+                .createMetaPaper(metaPaperObj)
+                .then((result) => {
+                    if (result.code == 200) {
+                        NowMetaPaper();
+                        proxy.$message.success("创建成功");
+                        createMetaPaperVisible.value = false;
+                    } else {
+                        proxy.$message.error("出错了" + result.msg);
+                    }
+                })
+                .catch((reason) => {
+                    proxy.$message.error("出错了" + reason);
+                });
+        };
+        const NowMetaPaper = () => {
             let params = {
                 teacherId: teacherId,
             };
@@ -132,15 +185,42 @@ export default {
                 .catch((reason) => {
                     proxy.$message.error("出错了" + reason);
                 });
+        };
+        const deleteMetaPaper = (paperId) => {
+            let params = {
+                paperId: paperId,
+            };
+            paperApi
+                .deleteMetaPaper(params)
+                .then((result) => {
+                    if (result.code == 200) {
+                        NowMetaPaper();
+                        proxy.$message.success("删除成功");
+                    } else {
+                        proxy.$message.error("出错了" + result.msg);
+                    }
+                })
+                .catch((reason) => {
+                    proxy.$message.error("出错了" + reason);
+                });
+        };
+
+        onMounted(() => {
+            NowMetaPaper();
         });
-        const dataFormat = (time) => time==undefined ? "" : moment(time).format('YYYY-MM-DD HH:mm');
+        const dataFormat = (time) =>
+            time == undefined ? "" : moment(time).format("YYYY-MM-DD HH:mm");
         return {
-            // collapsed,
-            // selectedKeys,
             metaPapers,
             teacherId,
+            createMetaPaperVisible,
+            metaPaperObj,
 
-            dataFormat
+            dataFormat,
+            createMetaPaper,
+            NowMetaPaper,
+            showModal,
+            deleteMetaPaper,
         };
     },
 };

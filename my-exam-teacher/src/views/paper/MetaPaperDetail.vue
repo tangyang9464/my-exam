@@ -4,7 +4,7 @@
             <a-row type="flex" justify="space-between">
                 <a-col>
                     <a-typography-paragraph v-model:content="editableStr" editable>
-                        <span style="font-weight: 600;font-size:18px">
+                        <span >
                             试卷名称
                         </span>
                     </a-typography-paragraph>

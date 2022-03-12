@@ -1,5 +1,5 @@
 <template>
-    <editor api-key="gx5xpm6qlw2n4mgdtwtxvspx8frzyhlztzyuoypix1tbqivt" :init=editorInit />
+    <Editor api-key="gx5xpm6qlw2n4mgdtwtxvspx8frzyhlztzyuoypix1tbqivt" :init=editorInit />
 </template>
 
  <script>

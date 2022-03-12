@@ -13,7 +13,7 @@ import cookies from 'vue-cookies'
 
 const routes = [
   {
-    path: "/metaPaperDetail",
+    path: "/metaPaperDetail/:paperId",
     name: "metaPaperDetail",
     component: MetaPaperDetail,
   },

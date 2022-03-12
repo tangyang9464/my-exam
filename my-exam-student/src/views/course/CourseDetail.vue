@@ -25,13 +25,14 @@
                     <a-tabs>
                         <a-tab-pane key="1" tab="试卷">
                         </a-tab-pane>
-                        <a-tab-pane key="2" tab="">
+                        <a-tab-pane key="2" tab="成员管理">
                         </a-tab-pane>
                     </a-tabs>
                 </a-row>
             </div>
             <a-layout-content style="padding:0 25px">
-                <a-row type="flex" :gutter="[20,20]">
+                <a-empty description="暂无试卷" style="top:50%;left:50%;position: absolute;" v-if="roomAllData.papers" />
+                <a-row type="flex" :gutter="[20,20]" v-if="roomAllData.papers">
                     <a-col v-for="paper in roomAllData.papers" :key="paper.id">
                         <router-link :to="'/paperDetail/' + paper.id">
                             <a-card hoverable style="width: 300px;">
@@ -130,7 +131,6 @@ export default {
                 });
         } else {
             let params2 = {
-                teacherId: this.userId,
                 roomId: route.params.roomId,
             };
             classroomApi
