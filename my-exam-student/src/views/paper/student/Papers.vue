@@ -3,44 +3,44 @@
         <a-layout>
             <a-layout-header class="my-header" />
             <a-layout-content style="padding:0 25px">
-                <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="papers.length==0"/>
+                <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="papers.length==0" />
                 <a-row type="flex" :gutter="20">
                     <a-col v-for="paper,key in papers" :key="key">
-                        <router-link :to="'/paperDetail/' + paper.id">
-                            <a-card hoverable style="width: 300px;margin-bottom: 50px;">
-                                <div class="my-text-center">
-                                    <a-typography-title :level="4">{{paper.paperName}}</a-typography-title>
-                                </div>
+                        <a-card hoverable style="width: 300px;margin-bottom: 50px;">
+                            <div class="my-text-center">
+                                <a-typography-title :level="4">{{paper.paperName}}</a-typography-title>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-typography-text type="secondary">满分：</a-typography-text>
-                                    <a-typography-text type="secondary">{{paper.totalScore}}分</a-typography-text>
-                                </div>
+                            <div class="my-text-center">
+                                <a-typography-text type="secondary">满分：</a-typography-text>
+                                <a-typography-text type="secondary">{{paper.totalScore}}分</a-typography-text>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-typography-text type="secondary">共{{paper.questionNumber}}题</a-typography-text>
-                                </div>
+                            <div class="my-text-center">
+                                <a-typography-text type="secondary">共{{paper.questionNumber}}题</a-typography-text>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-typography-text type="secondary">限时：{{paper.totalTime/60}}分钟</a-typography-text>
-                                </div>
+                            <div class="my-text-center">
+                                <a-typography-text type="secondary">限时：{{paper.totalTime/60}}分钟</a-typography-text>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-typography-text type="secondary">截止时间：{{dataFormat(paper.deadline)}}</a-typography-text>
-                                </div>
+                            <div class="my-text-center">
+                                <a-typography-text type="secondary">截止时间：{{dataFormat(paper.deadline)}}</a-typography-text>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-typography-text type="secondary">得分：</a-typography-text>
-                                    <a-typography-text type="success" style="font-size:19px;">{{paper.obtainScore}}</a-typography-text>
-                                </div>
+                            <div class="my-text-center">
+                                <a-typography-text type="secondary">得分：</a-typography-text>
+                                <a-typography-text type="success" style="font-size:19px;">{{paper.obtainScore}}</a-typography-text>
+                            </div>
 
-                                <div class="my-text-center">
-                                    <a-button type="primary" v-if="paper.finishStatus==0">开始答题</a-button>
+                            <div class="my-text-center">
+                                <a-button type="primary" @click="startAnswering(paper)" v-if="paper.finishStatus==0">开始答题</a-button>
+                                <router-link :to="'/paperDetail/' + paper.id">
                                     <a-button type="primary" v-if="paper.finishStatus==1">继续答题</a-button>
-                                    <a-button type="primary" disabled v-if="paper.finishStatus==2">已提交</a-button>
-                                </div>
-                            </a-card>
-                        </router-link>
+                                    <a-button type="primary" v-if="paper.finishStatus==2">查看试卷</a-button>
+                                </router-link>
+                            </div>
+                        </a-card>
                     </a-col>
                 </a-row>
             </a-layout-content>
@@ -52,17 +52,35 @@ import { defineComponent } from "vue";
 
 import paperApi from "@/api/paper";
 import { message } from "ant-design-vue";
-import cookies from 'vue-cookies'
-import moment from 'moment'
+import cookies from "vue-cookies";
+import moment from "moment";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
     components: {},
     methods: {
-        dataFormat(time){
-             if(time==undefined){
-                 return "";
-             }
-            return moment(time).format('YYYY-MM-DD HH:mm');
+        dataFormat(time) {
+            if (time == undefined) {
+                return "";
+            }
+            return moment(time).format("YYYY-MM-DD HH:mm");
+        },
+        startAnswering(paper) {
+            var router = useRouter();
+            let params = {
+                studentId: this.studentId,
+                paperId: this.paperId,
+            };
+            paperApi
+                .startAnswering(params)
+                .then((result) => {
+                    if (result.code == 200) {
+                        router.push("/paperDetail/" + paper.id);
+                    }
+                })
+                .catch((reason) => {
+                    message.error("出错了" + reason);
+                });
         },
     },
     mounted() {

@@ -4,10 +4,10 @@
             <a-layout-header class="my-header">
                 <a-row type="flex" align="right" :gutter="20">
                     <a-col>
-                        <PlusSquareOutlined />
-                        <a-typography-text type="primary" @click="showModal">
+                        <PlusCircleTwoTone two-tone-color="#1890ff" />
+                        <a-typography-link @click="showModal">
                             新建试卷
-                        </a-typography-text>
+                        </a-typography-link>
                         <a-modal v-model:visible="createMetaPaperVisible" @ok="createMetaPaper()">
                             <div>
                                 <a-typography-title :level="5">
@@ -70,30 +70,10 @@
                                     </a-tooltip>
                                 </router-link>
 
-                                <a-tooltip>
+                                <a-tooltip @click="showPublishModal(paper)">
                                     <template #title>发布</template>
                                     <SendOutlined />
                                 </a-tooltip>
-
-                                <a-modal visible="true" title="发布试卷" okText="确认" cancelText="取消">
-                                    <a-form :model="paperInfo" class="login-form" @submit="submit">
-                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发送班级" name="schoolClass">
-                                            <a-select v-model:value="value" mode="multiple" style="width: 100%" placeholder="选择发送班级" :options="publishSchoolClass" @change="handleChange"></a-select>
-                                        </a-form-item>
-                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发布名称" name="examName">
-                                            <a-input ></a-input>
-                                        </a-form-item>
-                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试时长" name="totalTime">
-                                            <a-select v-model:value="value" show-search placeholder="输入或选择时长" style="width: 200px" :options="options" :filter-option="filterOption" @focus="handleFocus" @blur="handleBlur" @change="handleChange"></a-select>
-                                        </a-form-item>
-                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试开始时间" name="examName">
-                                            <a-date-picker show-time placeholder="选择开始时间" @change="onChange" @ok="onOk" />
-                                        </a-form-item>
-                                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试截止时间" name="examName">
-                                            <a-date-picker show-time placeholder="选择截止时间" @change="onChange" @ok="onOk" />
-                                        </a-form-item>
-                                    </a-form>
-                                </a-modal>
 
                                 <a-tooltip @click="deleteMetaPaper(paper.id)">
                                     <template #title>
@@ -120,6 +100,26 @@
                         </a-card>
                     </a-col>
                 </a-row>
+
+                <a-modal :visible="publishModalVisible" title="发布试卷" okText="确认" cancelText="取消" @ok="publishPaper()">
+                    <a-form :model="paperInfo" class="login-form" @submit="submit">
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发送班级" name="schoolClass">
+                            <a-select v-model:value="publishInfo.roomIds" mode="multiple" style="width: 100%" placeholder="选择发送班级" :options="publishSchoolClass"></a-select>
+                        </a-form-item>
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发布名称" name="examName">
+                            <a-input v-model:value="publishInfo.publishName"></a-input>
+                        </a-form-item>
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试时长" name="totalTime">
+                            <a-select v-model:value="publishInfo.totalTime" show-search placeholder="输入或选择时长" style="width: 200px" :options="totalTimeOptions"></a-select>
+                        </a-form-item>
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试开始时间" name="examName">
+                            <a-date-picker v-model:value="publishInfo.allowedStartTime" show-time placeholder="选择开始时间" @change="onChange" @ok="onOk" />
+                        </a-form-item>
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="考试截止时间" name="examName">
+                            <a-date-picker v-model:value="publishInfo.deadline" show-time placeholder="选择截止时间" @change="onChange" @ok="onOk" />
+                        </a-form-item>
+                    </a-form>
+                </a-modal>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -130,11 +130,12 @@ import {
     EditOutlined,
     EllipsisOutlined,
     DeleteOutlined,
-    PlusSquareOutlined,
+    PlusCircleTwoTone
 } from "@ant-design/icons-vue";
 import { getCurrentInstance, onMounted, reactive, ref } from "vue";
 import paperApi from "@/api/paper";
 import moment from "moment";
+import classroomApi from "@/api/classroom";
 
 export default {
     components: {
@@ -142,7 +143,7 @@ export default {
         EditOutlined,
         EllipsisOutlined,
         DeleteOutlined,
-        PlusSquareOutlined,
+        PlusCircleTwoTone,
     },
     setup() {
         const { proxy } = getCurrentInstance();
@@ -152,9 +153,59 @@ export default {
         const metaPaperObj = reactive({
             teacherId: teacherId,
         });
+        const publishInfo = reactive({
+            teacherId: teacherId,
+            metaPaperId: "",
+            undoneNumber: 0,
+            publishName:'',
+            roomIds:[],
+            totalTime:0
+        });
+        const publishModalVisible = ref(false);
+        const totalTimeOptions = ref([
+            {
+                value: 30,
+                label: 30,
+            },
+            {
+                value: 60,
+                label: 60,
+            },
+            {
+                value: 90,
+                label: 90,
+            },
+        ]);
+
+        const publishSchoolClass = ref([]);
 
         const showModal = () => {
             createMetaPaperVisible.value = true;
+        };
+
+        const showPublishModal = (paper) => {
+            publishInfo.metaPaperId = paper.id;
+            publishInfo.undoneNumber = paper.questionNumber;
+            publishInfo.publishName = paper.paperName;
+            publishModalVisible.value = true;
+            fetchSchoolClass();
+        };
+
+        const publishPaper = () => {
+            publishInfo.totalTime *= 60;
+            paperApi
+                .publishPaper(publishInfo)
+                .then((result) => {
+                    if (result.code == 200) {
+                        proxy.$message.success("发布成功");
+                        publishModalVisible.value = false;
+                    } else {
+                        proxy.$message.error("出错了" + result.msg);
+                    }
+                })
+                .catch((reason) => {
+                    proxy.$message.error("出错了" + reason);
+                });
         };
 
         const createMetaPaper = () => {
@@ -210,17 +261,53 @@ export default {
         });
         const dataFormat = (time) =>
             time == undefined ? "" : moment(time).format("YYYY-MM-DD HH:mm");
+
+        const handleChange = () => {
+           
+            // fetchSchoolClass();
+        };
+
+        const fetchSchoolClass = () => {
+            let params = {
+                teacherId: teacherId,
+            };
+            classroomApi
+                .listTeacherRoom(params)
+                .then((result) => {
+                    let rooms = result.data;
+                    const arr = [];
+                    for(let room of rooms) {
+                        arr.push({
+                            value:room.id,
+                            label:room.course+"-"+room.schoolClass
+                        })
+                    }
+                    publishSchoolClass.value = arr;
+                })
+                .catch((reason) => {
+                    proxy.$message.error("出错了:" + reason);
+                });
+        }
+
         return {
             metaPapers,
             teacherId,
             createMetaPaperVisible,
             metaPaperObj,
+            publishInfo,
+            publishModalVisible,
+            totalTimeOptions,
+            publishSchoolClass,
 
+            handleChange,
             dataFormat,
             createMetaPaper,
             NowMetaPaper,
             showModal,
             deleteMetaPaper,
+            publishPaper,
+            showPublishModal,
+
         };
     },
 };

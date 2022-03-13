@@ -116,7 +116,7 @@
                                             <template #overlay>
                                                 <a-menu>
                                                     <a-menu-item>
-                                                        <div class="my-hover" @click="editRoom(room.id)">编辑</div>
+                                                        <div class="my-hover" @click="editRoom(room)">编辑</div>
                                                     </a-menu-item>
                                                     <a-menu-item>
                                                         <div class="my-hover" @click="exitRoom(room.id)">删除</div>
@@ -139,7 +139,7 @@
                                         <HomeOutlined />
                                         <a-typography-text style="margin-left:5px">{{room.schoolClass}}班</a-typography-text>
                                     </a-col>
-                                    <a-col>
+                                    <a-col v-if="role==1">
                                         <a-typography-text :copyable="getCopyText(room.id)">课堂暗号</a-typography-text>
                                     </a-col>
                                 </a-row>
@@ -203,9 +203,11 @@ export default {
                     message.error("加入课堂出错了" + reason);
                 });
         },
-        editRoom(roomId){
+        editRoom(room){
             this.createRoomVisible = true;
-            this.editRoomId = roomId;
+            this.editRoomId = room.id;
+            this.course = room.course;
+            this.schoolClass = room.schoolClass;
         },
         createRoom() {
             let params = {
