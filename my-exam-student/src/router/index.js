@@ -9,9 +9,15 @@ import Register from "../views/login/Register.vue";
 import UserCenter from "../views/user/UserCenter.vue";
 import MetaPaper from "../views/paper/teacher/MetaPaper"
 import MetaPaperDetail from "../views/paper/teacher/MetaPaperDetail"
+import SummaryTeacherPaper from "../views/paper/teacher/SummaryTeacherPaper"
 import cookies from 'vue-cookies'
 
 const routes = [
+  {
+    path: "/summaryPaper/:paperId",
+    name: "summaryPaper",
+    component: SummaryTeacherPaper,
+  },
   {
     path: "/metaPaperDetail/:paperId",
     name: "metaPaperDetail",

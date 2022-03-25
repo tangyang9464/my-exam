@@ -5,10 +5,83 @@
         </a-layout-header>
 
         <a-statistic-countdown v-if="this.questionData.finishStatus!=2" title="剩余时间" :value="deadline" class="my-countdown" @finish="submit" />
-
         <a-layout-content style="padding:0 25px">
             <div v-for="question,key in questionData.questions" :key="key">
-                <a-card>
+                <a-card v-if="questionData.finishStatus==2">
+                    <a-row :gutter="10">
+                        <a-col>
+                            <div>{{key}}.</div>
+                        </a-col>
+                        <a-col style="max-width: 800px;">
+                            <div v-html="question.stem">
+                            </div>
+                            <!-- 单选选择题 -->
+                            <a-radio-group v-if="question.questionType == 0">
+                                <div v-for="option,key2 in question.options" :key="key2" class="radioStyle">
+                                    <span class="ant-radio" :class="{'ant-radio-checked':key2==studentAnswers[key2]}">
+                                        <span class="ant-radio-inner"></span>
+                                    </span>
+                                    <span>
+                                        {{String.fromCharCode('A'.charCodeAt(0) + key2)}}.
+                                        <div style="display:inline-block" v-html="option"></div>
+                                    </span>
+                                </div>
+                            </a-radio-group>
+                            <!-- 多选 -->
+                            <a-checkbox-group v-if="question.questionType == 1">
+                                <div v-for="option,key2 in question.options" :key="key2" class="radioStyle">
+                                    <span class="ant-checkbox" :class="{'ant-checkbox-checked':isExist(studentAnswers[key2],key2)}">
+                                        <span class="ant-checkbox-inner"></span>
+                                    </span>
+                                    <span>
+                                        {{String.fromCharCode('A'.charCodeAt(0) + key2)}}.
+                                        <div style="display:inline-block" v-html="option"></div>
+                                    </span>
+                                </div>
+                            </a-checkbox-group>
+                            <!-- 判断题 -->
+                            <a-radio-group v-model:value="value" v-if="question.questionType==2">
+                                <div class="radioStyle">
+                                    <span class="ant-radio" :class="{'ant-radio-checked':studentAnswers[key]=='T'}">
+                                        <span class="ant-radio-inner"></span>
+                                    </span>
+                                    <span>
+                                        T
+                                    </span>
+                                </div>
+
+                                <div class="radioStyle">
+                                    <span class="ant-radio" :class="{'ant-radio-checked':'F'==studentAnswers[key]}">
+                                        <span class="ant-radio-inner"></span>
+                                    </span>
+                                    <span>
+                                        F
+                                    </span>
+                                </div>
+                            </a-radio-group>
+                        </a-col>
+                        <a-col>
+                            <div>
+                                ({{question.score}}分)
+                            </div>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="10" style="margin-top:20px" v-if="correctStatus[key]!=undefined">
+                            <a-col>
+                                <div>{{key}}.</div>
+                            </a-col>
+                            <a-col v-if="correctStatus[key]==1">
+                                <a-typography-text type="success"> 答案正确</a-typography-text>
+                            </a-col>
+                            <a-col v-else>
+                                <a-typography-text type="danger"> 答案错误</a-typography-text>
+                            </a-col>
+                            <a-col v-if="correctStatus[key]!=1">
+                                <a-typography-text type="success">正确答案：{{digitToLetter(question.correctAnswer)}}</a-typography-text>
+                            </a-col>
+                        </a-row>
+                </a-card>
+                <a-card v-else>
                     <a-row :gutter="10">
                         <a-col>
                             <div>{{key}}.</div>
@@ -48,22 +121,9 @@
                             </div>
                         </a-col>
                     </a-row>
-                    <a-row :gutter="10" style="margin-top:20px" v-if="correctStatus[key]!=undefined">
-                        <a-col>
-                            <div>{{key}}.</div>
-                        </a-col>
-                        <a-col v-if="correctStatus[key]==1">
-                            <a-typography-text type="success"> 答案正确</a-typography-text>
-                        </a-col>
-                        <a-col v-else>
-                            <a-typography-text type="danger"> 答案错误</a-typography-text>
-                        </a-col>
-                        <a-col v-if="correctStatus[key]!=1">
-                            <a-typography-text type="success">正确答案：{{digitToLetter(question.correctAnswer)}}</a-typography-text>
-                        </a-col>
-                    </a-row>
 
                 </a-card>
+
             </div>
         </a-layout-content>
         <a-affix :offset-bottom="10" v-if="this.questionData.finishStatus!=2">
@@ -82,13 +142,14 @@ import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 import cookies from "vue-cookies";
 import moment from "moment";
+
 export default {
     data() {
         return {
             questionData: {},
-            studentAnswers: [],
             paperId: "",
             disabled: false,
+            studentAnswers:[],
             correctStatus: [],
             studentId: "",
             deadline: 0,
@@ -99,15 +160,17 @@ export default {
         digitToLetter(answer) {
             if (Array.isArray(answer)) {
                 return answer.map((a) => String.fromCharCode(a + 65));
-            } else {
+            } else if(answer!='T' && answer!='F'){
                 return String.fromCharCode(answer + 65);
+            } else{
+                return answer;
             }
         },
         submit() {
             let params = {
                 studentPaperId: this.paperId,
-                metaPaperId:this.questionData.metaPaperId,
-                teacherPaperId:this.questionData.teacherPaperId,
+                metaPaperId: this.questionData.metaPaperId,
+                teacherPaperId: this.questionData.teacherPaperId,
                 answers: this.studentAnswers,
             };
             paperApi
@@ -121,6 +184,34 @@ export default {
                     message.error("出错了" + reason);
                 });
         },
+        tempSave(){
+            let params = {
+                studentPaperId: this.paperId,
+                metaPaperId: this.questionData.metaPaperId,
+                teacherPaperId: this.questionData.teacherPaperId,
+                answers: this.studentAnswers,
+            };
+            paperApi
+                .tempSave(params)
+                .then((result) => {
+                    this.questionData = result.data;
+                })
+                .catch((reason) => {
+                    message.error("出错了" + reason);
+                });
+        },
+        isExist(arr,target){
+            for(let i=0;i<arr.length;i++){
+                let num = arr[i];
+                if(target==num){
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    beforeUnmount() {
+        this.tempSave();
     },
     mounted() {
         this.studentId = cookies.get("userId");
@@ -129,8 +220,7 @@ export default {
         this.paperId = route.params.paperId;
         var vue = this;
         window.onbeforeunload = () => {
-            vue.submit();
-            message.success("交卷成功");
+            vue.tempSave();
         };
         let params = {
             paperId: this.paperId,

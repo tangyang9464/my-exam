@@ -3,6 +3,7 @@ import { post,postWithJson } from '@/utils/request'
 export default {
   detail: paperId => post(`/api/paper/detail`,paperId),
   submit: params => postWithJson(`/api/paper/submit`,params),
+  tempSave: params => postWithJson(`/api/paper/tempSave`,params),
   startAnswering: params => post(`/api/paper/startAnswering`,params),
   undonePapers: params => post(`/api/paper/undonePapers`,params),
   metaPapers: params => post(`/api/paper/metaPapers`,params),
