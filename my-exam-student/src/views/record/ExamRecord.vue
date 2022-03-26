@@ -4,7 +4,7 @@
             <a-layout-header class="my-header" />
             <a-layout-content style="padding:0 25px">
                 <a-empty description="暂无考试记录" style="top:50%;left:50%;position: absolute;" v-if="recordData.length==0"/>
-                <a-row type="flex" align="middle">
+                <a-row type="flex" align="middle" :gutter="20">
                     <a-col v-for="record,key in recordData" :key="key">
                         <router-link :to="'/paperDetail/' + record.id">
                             <a-card hoverable style="width: 300px;margin-bottom: 50px;">

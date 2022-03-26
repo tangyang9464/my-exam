@@ -118,9 +118,9 @@
                                                     <a-menu-item>
                                                         <div class="my-hover" @click="editRoom(room)">编辑</div>
                                                     </a-menu-item>
-                                                    <a-menu-item>
+                                                    <!-- <a-menu-item>
                                                         <div class="my-hover" @click="exitRoom(room.id)">删除</div>
-                                                    </a-menu-item>
+                                                    </a-menu-item> -->
                                                 </a-menu>
                                             </template>
                                         </a-dropdown>
