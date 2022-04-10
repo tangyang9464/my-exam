@@ -13,4 +13,5 @@ export default {
   deleteMetaPaper: params => post(`/api/paper/deleteMetaPaper`,params),
   createMetaPaper: params => postWithJson(`/api/paper/createMetaPaper`,params),
   getTeacherPaper: params => post(`/api/paper/getTeacherPaper`,params),
+  getStudentPaper: params => post(`/api/paper/getStudentPaper`,params),
 }

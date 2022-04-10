@@ -1,53 +1,81 @@
 <template>
-    <a-layout style="min-height: 100vh">
-        <a-layout>
+    <a-layout style="min-height: 100vh;">
+        <a-layout style="background:#ffffff">
             <a-layout-header class="my-header">
                 <a-typography-text style="font-size: 17px">{{teacherPaper.publishName}} </a-typography-text>
             </a-layout-header>
 
             <a-layout-content style="padding: 0 25px">
-                <a-row :gutter="20">
-                    <a-col :span="10">
-                        <a-card title="完成情况">
-                            <a-row type="flex" justify="space-around" align="middle">
-                                <a-col :span="24" style="text-align: center; margin-bottom: 40px">
-                                    <a-progress type="circle" :percent="(teacherPaper.doneNumber / totalStudentNumber) * 100" />
-                                </a-col>
+                <div class="label_3XKMT" style="font-size:18px">试卷统计</div>
+				<a-row type="flex" justify="space-between">
+                    <a-col span="12">
+                        <a-row type="flex" justify="space-between" style="height:25%">
+                            <a-col style="margin:auto 0;">
+                                <div class="label_3XKMT">已完成</div>
+                            </a-col>
+                            <a-col style="margin:auto 0;height:25%">
+                                <span class="value_2e-rV">{{ teacherPaper.doneNumber }} 人</span>
+                            </a-col>
+                        </a-row>
 
-                                <a-col :span="7" style="text-align: center">
-                                    <a-typography-text style="font-size: 17px" class="my-dot-left">已完成: {{ teacherPaper.doneNumber }} 人</a-typography-text>
-                                </a-col>
+                        <a-row type="flex" justify="space-between" style="height:25%">
+                            <a-col style="margin:auto 0;height:25%">
+                                <div class="label_3XKMT">未完成</div>
+                            </a-col>
+                            <a-col style="margin:auto 0;height:25%">
+                                <span class="value_2e-rV">{{ teacherPaper.undoneNumber }} 人</span>
+                            </a-col>
+                        </a-row>
 
-                                <a-col :span="7" style="text-align: center">
-                                    <a-typography-text style="font-size: 17px" class="my-dot-right">未完成:
-                                        {{ teacherPaper.undoneNumber }} 人</a-typography-text>
-                                </a-col>
-                            </a-row>
+						<a-row type="flex" justify="space-between" style="height:25%">
+                            <a-col style="margin:auto 0;">
+                                <div class="label_3XKMT">正确率</div>
+                            </a-col>
+                            <a-col style="margin:auto 0;">
+                                <span class="value_2e-rV">{{(teacherPaper.correctQuestionNumber /(totalQuestionNumber * totalStudentNumber)).toFixed(2)*100}}%</span>
+                            </a-col>
+                        </a-row>
 
-                            <a-row type="flex" justify="space-around" align="middle" style="margin-top: 50px">
-                                <a-col :span="24" style="text-align: center; margin-bottom: 15px">
-                                    <a-button type="primary" size="large" @click="showModal()">查看试卷</a-button>
-                                </a-col>
-                            </a-row>
-                        </a-card>
+						<a-row type="flex" justify="space-between" style="height:25%">
+                            <a-col style="margin:auto 0;">
+                                <div class="label_3XKMT">平均得分</div>
+                            </a-col>
+                            <a-col style="margin:auto 0;">
+                                <span class="value_2e-rV">{{ teacherPaper.allScore / totalStudentNumber }}分</span>
+                            </a-col>
+                        </a-row>
                     </a-col>
-                    <a-col :span="10">
-                        <a-card title="试卷统计">
-                            <a-row type="flex" justify="space-around" align="middle">
-                                <a-col :span="7" style="text-align: center">
-                                    <a-typography-text style="font-size: 17px" class="my-dot-left">平均得分:
-                                        {{ teacherPaper.allScore / totalStudentNumber }}
-                                        分</a-typography-text>
-                                </a-col>
-                                <!-- {{teacherPaper.questions.length}} -->
-                                <a-col :span="7" style="text-align: center">
-                                    <a-typography-text style="font-size: 17px" class="my-dot-mid">正确率:
-                                        {{(teacherPaper.correctQuestionNumber /(totalQuestionNumber * totalStudentNumber)).toFixed(2)*100}}%</a-typography-text>
-                                </a-col>
-                            </a-row>
-                        </a-card>
+                    <a-col span="11">
+                        <div style="height: 50%;text-align:center;width:100%">
+							<div class="label_3XKMT">
+                                完成率
+                            </div>
+                            <a-progress type="circle" :percent="(teacherPaper.doneNumber / totalStudentNumber) * 100" />
+						</div>
+                        <div style="height: 50%;text-align:center;width:100%">
+							<div class="label_3XKMT">
+                                正确率
+                            </div>
+                            <a-progress type="circle" :percent="(teacherPaper.correctQuestionNumber /(totalQuestionNumber * totalStudentNumber)).toFixed(2)*100" />
+                        </div>
                     </a-col>
                 </a-row>
+
+                <a-card style="margin-top: 40px;">
+                    <a-row type="flex" justify="space-between">
+                        <a-col>
+                        </a-col>
+
+                        <a-col>
+                            <div class="my-text-center">
+                                <a-button type="primary" size="large" ghost @click="showModal()">查看试卷</a-button>
+                            </div>
+                        </a-col>
+						<a-col>
+                        </a-col>
+                    </a-row>
+                </a-card>
+
                 <a-modal :footer="null" okText="确认" cancelText="取消" centered v-model:visible="summaryVisible" width="90%" :maskStyle="{ background: '#4c4c4c' }">
                     <a-card :bodyStyle="{'background-color':'#f0f2f5'}" title="题目详情" :tab-list="questionNumberList" :active-tab-key="curQuestionIndex" @tabChange="(index) => onTabChange(index)">
                         <a-row type="flex" justify="space-around" align="middle">

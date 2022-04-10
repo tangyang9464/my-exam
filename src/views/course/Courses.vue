@@ -86,16 +86,16 @@
             <a-layout-content style="padding:0 25px" class="my-scroll">
                 <a-empty description="暂无已加入的课堂" style="top:50%;left:50%;position: absolute;" v-if="empty" />
                     <a-row type="flex" :gutter="20">
-                        <a-col v-for="room in rooms" :key="room.id">
+                        <a-col v-for="room, key in rooms" :key="room.id">
                             <router-link :to="'/courseDetail/' + room.id">
-                                <a-card hoverable style="width: 300px;margin-bottom: 50px;">
+                                <a-card hoverable :style="'border-radius: 5%;width: 300px;margin-bottom: 50px;background-image: '+color(key)">
                                     <a-row type="flex" justify="space-between" align="middle" style="margin-bottom: 50px;">
                                         <a-col>
-                                            <a-typography-title :level="3">{{room.course}}</a-typography-title>
+                                            <a-typography-text style="color:#ffffff;font-weight:500;font-size:19px" :level="3">{{room.course}}</a-typography-text>
                                         </a-col>
                                         <a-col v-if="role==0">
                                             <a-dropdown>
-                                                <EllipsisOutlined :style="{ fontSize: '25px' }" />
+                                                <EllipsisOutlined :style="{ fontSize: '25px', color: '#ffffff'}" />
                                                 <template #overlay>
                                                     <a-menu>
                                                         <a-menu-item>
@@ -110,7 +110,7 @@
                                         </a-col>
                                         <a-col v-else>
                                             <a-dropdown>
-                                                <EllipsisOutlined :style="{ fontSize: '25px' }" />
+                                                <EllipsisOutlined :style="{ fontSize: '25px', color: '#ffffff'}" />
                                                 <template #overlay>
                                                     <a-menu>
                                                         <a-menu-item>
@@ -127,18 +127,18 @@
                                     <a-row type="flex" justify="space-between" align="middle">
                                         <a-col v-if="role==0">
                                             <a-avatar :src="'http://localhost:9090/upload/'+room.teacherAvatar" />
-                                            <span style="vertical-align: middle;margin-left:10px">{{room.teacherName}}</span>
+                                            <span style="vertical-align: middle;margin-left:10px;color:#ffffff">{{room.teacherName}}</span>
                                         </a-col>
                                         <a-col v-else>
-                                            <UserOutlined />
-                                            <a-typography-text style="margin-left:5px">{{room.studentNumber}}</a-typography-text>
+                                            <UserOutlined :style="{color: '#ffffff'}"/>
+                                            <a-typography-text style="margin-left:5px;color:#ffffff">{{room.studentNumber}}</a-typography-text>
                                         </a-col>
                                         <a-col>
-                                            <HomeOutlined />
-                                            <a-typography-text style="margin-left:5px">{{room.schoolClass}}班</a-typography-text>
+                                            <HomeFilled :style="{color: '#ffffff'}"/>
+                                            <a-typography-text style="margin-left:5px;color:#ffffff">{{room.schoolClass}}班</a-typography-text>
                                         </a-col>
                                         <a-col v-if="role==1">
-                                            <a-typography-text :copyable="getCopyText(room.id)">课堂暗号</a-typography-text>
+                                            <a-typography-text style="color: #ffffff" :copyable="getCopyText(room.id)">课堂暗号</a-typography-text>
                                         </a-col>
                                     </a-row>
                                 </a-card>
@@ -150,16 +150,16 @@
     </a-layout>
 </template>
 <script>
-import { HomeOutlined, EllipsisOutlined, UserOutlined } from '@ant-design/icons-vue';
+import {EllipsisOutlined, UserOutlined,HomeFilled } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import cookies from 'vue-cookies';
 import classroomApi from '@/api/classroom';
 
 export default {
 	components: {
-		HomeOutlined,
 		EllipsisOutlined,
-		UserOutlined
+		UserOutlined,
+		HomeFilled
 	},
 	data() {
 		return {
@@ -272,6 +272,21 @@ export default {
 					message.error('出错了:' + reason);
 				});
 		},
+		color(index){
+			// let max = 3,min=0;
+			// index = parseInt(Math.random()*(max-min+1)+min,10);
+			index = index % 4;
+			switch(index){
+				case 0:
+					return 'linear-gradient(to bottom right, #8360fa, #cb8dff)';
+				case 1: 
+					return 'linear-gradient(to bottom right, #4762f3, #5cc3ff)';
+				case 2:
+					return 'linear-gradient(to bottom right, #ff6098, #ffa96a)'
+				case 3: 
+					return 'linear-gradient(to bottom right, #1fbdb8, #47e894)'
+			}
+		},
 		joinHistoryRoom(roomId) {
 			let params = {
 				roomId: roomId,
@@ -380,5 +395,8 @@ export default {
 }
 [data-theme='dark'] .site-layout .site-layout-background {
 	background: #141414;
+}
+.ant-typography-expand, .ant-typography-edit, .ant-typography-copy{
+	color:#ffffff !important
 }
 </style>

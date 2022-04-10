@@ -1,52 +1,38 @@
 <template>
     <a-layout style="min-height: 100vh">
         <a-layout>
-            <a-layout-header class="my-header" />
+            <a-layout-header class="my-header" >
+				<a-tabs>
+					<a-tab-pane key="1" tab="历史记录">
+					</a-tab-pane>
+					<a-tab-pane key="2" tab="">
+					</a-tab-pane>
+				</a-tabs>
+			</a-layout-header>
             <a-layout-content style="padding:0 25px" class="my-scroll">
-                <a-empty description="暂无考试记录" style="top:50%;left:50%;position: absolute;" v-if="recordData!=undefined && recordData.length==0" />
-                    <a-row type="flex" align="middle" :gutter="20">
-                        <a-col v-for="record,key in recordData" :key="key">
-                            <router-link :to="'/paperDetail/' + record.id">
-                                <a-card hoverable style="width: 300px;margin-bottom: 50px;">
-                                    <a-typography-title :level="4">{{record.publishName}}</a-typography-title>
-                                    <a-row type="flex" :gutter="[0,10]" align="middle" class="my-bottom">
-                                        <a-col :span="12">
-                                            <a-typography-text type="secondary">题目数量：</a-typography-text>
-                                            <a-typography-text type="secondary">{{record.questionNumber}}</a-typography-text>
-                                        </a-col>
-                                        <a-col :span="12">
-                                            <a-typography-text type="secondary">正确数量：</a-typography-text>
-                                            <a-typography-text type="secondary">{{record.correctNumber}}</a-typography-text>
-                                        </a-col>
-
-                                        <a-col :span="12">
-                                            <a-typography-text type="secondary">试卷总分：</a-typography-text>
-                                            <a-typography-text type="secondary">{{record.totalScore}}分</a-typography-text>
-                                        </a-col>
-                                        <a-col :span="12">
-                                        </a-col>
-
-                                        <a-col :span="24">
-                                            <a-typography-text type="secondary">提交时间：</a-typography-text>
-                                            <a-typography-text type="secondary">{{dataFormat(record.submitTime)}}</a-typography-text>
-                                        </a-col>
-
-                                        <a-col :span="24">
-                                            <a-typography-text type="secondary">截止时间：</a-typography-text>
-                                            <a-typography-text type="secondary">{{dataFormat(record.deadline)}}</a-typography-text>
-                                        </a-col>
-
-                                        <a-col>
-                                            <a-typography-text type="secondary">最终得分：</a-typography-text>
-                                        </a-col>
-                                        <a-col>
-                                            <a-typography-text type="success" style="font-size:19px;">{{record.obtainScore}}</a-typography-text>
-                                        </a-col>
-                                    </a-row>
-                                </a-card>
-                            </router-link>
-                        </a-col>
-                    </a-row>
+                <!-- <a-empty description="暂无考试记录" style="top:50%;left:50%;position: absolute;" v-if="recordData!=undefined && recordData.length==0" /> -->
+                <a-list class="demo-loadmore-list" item-layout="horizontal" :data-source="recordData">
+                    <template #renderItem="{ item }">
+                        <a-list-item style="border-radius: 4px;padding: 8px 12px;background: #ffffff;margin: 8px 0;">
+                            <!-- <a-skeleton avatar :title="false" active> -->
+                            <a-list-item-meta style="margin: auto 8px auto 0;font-size: 25px;" description="结束时间: 2019/08/11 12:00:00">
+                                <template #title>
+                                    <router-link :to="'/papers/'+item.id">
+                                        <a href="#">{{item.publishName}}</a>
+                                    </router-link>
+                                </template>
+                                <template #avatar>
+                                    <DesktopOutlined />
+                                </template>
+                            </a-list-item-meta>
+                            <UserOutlined />
+                            <div style="margin:0 10px 0 5px">{{item.teacherName}}</div>
+                            <div style="height: 20px;border-radius: 4px;color: #fff;line-height: 20px;font-size: 12px;padding: 0 6px;text-align: center;background-color: rgb(153, 153, 153);">
+                                已关闭
+                            </div>
+                        </a-list-item>
+                    </template>
+                </a-list>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -56,15 +42,16 @@ import recordApi from '@/api/record';
 import { message } from 'ant-design-vue';
 import moment from 'moment';
 import cookies from 'vue-cookies';
+import {UserOutlined, DesktopOutlined } from '@ant-design/icons-vue';
 
 export default {
-	components: {},
+	components: { UserOutlined, DesktopOutlined },
 
 	data() {
 		return {
 			selectedKeys: '1',
 			studentId: '',
-			recordData: undefined,
+			recordData: undefined
 		};
 	},
 	methods: {

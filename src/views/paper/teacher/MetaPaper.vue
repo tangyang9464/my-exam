@@ -8,7 +8,7 @@
                         <a-typography-link @click="showModal">
                             新建试卷
                         </a-typography-link>
-                        <a-modal v-model:visible="createMetaPaperVisible" @ok="createMetaPaper()" >
+                        <a-modal v-model:visible="createMetaPaperVisible" @ok="createMetaPaper()">
                             <div>
                                 <a-typography-title :level="5">
                                     试卷名称
@@ -21,8 +21,44 @@
             </a-layout-header>
 
             <a-layout-content style="padding:0 25px" class="my-scroll">
-                <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="metaPapers.length==0" />
-                <a-row type="flex" :gutter="20">
+                <!-- <a-empty description="暂无待做试卷" style="top:50%;left:50%;position: absolute;" v-if="metaPapers.length==0" /> -->
+                <a-list class="demo-loadmore-list" item-layout="horizontal" :data-source="metaPapers">
+                    <template #renderItem="{ item }">
+                        <a-list-item style="border-radius: 4px;padding: 8px 30px;background: #ffffff;margin: 8px 0;">
+                            <!-- <a-skeleton avatar :title="false" active> -->
+                            <a-list-item-meta style="margin: auto 8px auto 0;font-size: 25px;" description="结束时间：2019/08/11 12:00:00">
+                                <template #title>
+                                    <a href="#">{{item.paperName}}</a>
+                                    <router-link v-if="role==0" :to="'/papers/'+item.id">
+                                        <a href="#">{{item.paperName}}</a>
+                                    </router-link>
+
+                                    <router-link v-else :to="'/summaryPaper/'+item.id">
+                                        <a href="#">{{item.publishName}}</a>
+                                    </router-link>
+                                </template>
+                                <template #avatar>
+                                    <DesktopOutlined />
+                                </template>
+                            </a-list-item-meta>
+                            <router-link :to="'/metaPaperDetail/'+item.id">
+                                <div style="margin:0 10px 0 20px">
+                                    <EditOutlined style="color:#1890ff;margin-right:5px" />
+                                    <a>编辑</a>
+                                </div>
+                            </router-link>
+                            <div style="margin:0 10px 0 20px" @click="showPublishModal(item)">
+                                <SendOutlined style="color:#1890ff;margin-right:5px" />
+                                <a>发布</a>
+                            </div>
+                            <div style="margin:0 10px 0 20px" @click="deleteMetaPaper(item.id)">
+                                <DeleteOutlined style="color:#1890ff;margin-right:5px" />
+                                <a>删除</a>
+                            </div>
+                        </a-list-item>
+                    </template>
+                </a-list>
+                <!-- <a-row type="flex" :gutter="20">
                     <a-col v-for="paper,key in metaPapers" :key="key">
                         <a-card hoverable style="width: 300px;margin-bottom: 50px;">
 
@@ -45,11 +81,6 @@
                                     <a-typography-text type="secondary">共{{paper.questionNumber}}题</a-typography-text>
                                 </a-col>
                             </a-row>
-                            <!-- <a-row type="flex" justify="center" align="middle" class="my-bottom">
-                                    <a-col>
-                                        <a-typography-text type="secondary">限时：{{paper.totalTime/60}}分</a-typography-text>
-                                    </a-col>
-                                </a-row> -->
                             <a-row type="flex" justify="center" align="middle" class="my-bottom">
                                 <a-col>
                                     <a-typography-text type="secondary">创建时间：{{dataFormat(paper.createTime)}}</a-typography-text>
@@ -81,25 +112,10 @@
                                     </template>
                                     <DeleteOutlined />
                                 </a-tooltip>
-
-                                <!-- <a-dropdown :trigger="['click']">
-                                    <a-tooltip>
-                                        <template #title></template>
-                                        <EllipsisOutlined />
-                                    </a-tooltip>
-
-                                    <template #overlay>
-                                        <a-menu>
-                                            <a-menu-item>
-                                                <div>重命名</div>
-                                            </a-menu-item>
-                                        </a-menu>
-                                    </template>
-                                </a-dropdown> -->
                             </template>
                         </a-card>
                     </a-col>
-                </a-row>
+                </a-row> -->
 
                 <a-modal v-model:visible="publishModalVisible" title="发布试卷" @ok="publishPaper()">
                     <a-form :model="paperInfo" class="login-form" @submit="submit">
@@ -128,9 +144,9 @@
 import {
 	SendOutlined,
 	EditOutlined,
-	// EllipsisOutlined,
 	DeleteOutlined,
-	PlusCircleTwoTone
+	PlusCircleTwoTone,
+	DesktopOutlined
 } from '@ant-design/icons-vue';
 import { getCurrentInstance, onMounted, reactive, ref, toRaw } from 'vue';
 import paperApi from '@/api/paper';
@@ -139,9 +155,9 @@ import classroomApi from '@/api/classroom';
 
 export default {
 	components: {
+		DesktopOutlined,
 		SendOutlined,
 		EditOutlined,
-		// EllipsisOutlined,
 		DeleteOutlined,
 		PlusCircleTwoTone
 	},
@@ -162,7 +178,7 @@ export default {
 			totalTime: 30
 		});
 		const publishModalVisible = ref(false);
-        const rawTotalTimeOptions = [
+		const rawTotalTimeOptions = [
 			{
 				value: 30,
 				label: 30
@@ -196,7 +212,7 @@ export default {
 		const publishPaper = () => {
 			let publishInfoCopy = toRaw(publishInfo);
 			publishInfoCopy.totalTime *= 60;
-			for(let tempId of publishInfoCopy.roomIds){
+			for (let tempId of publishInfoCopy.roomIds) {
 				publishInfoCopy.undoneNumbers.push(roomStudentNumber[tempId]);
 			}
 			paperApi
@@ -289,25 +305,25 @@ export default {
 					proxy.$message.error('出错了:' + reason);
 				});
 		};
-        const tempTimeInput = ref(0);
+		const tempTimeInput = ref(0);
 		const handleSearch = val => {
-            if((isNaN(val) || val=='')){
-                return;
-            }
-            let arr = [];
-            arr.push({
-                value:val,
-                label:val
-            });
-            totalTimeOptions.value = arr;
+			if (isNaN(val) || val == '') {
+				return;
+			}
+			let arr = [];
+			arr.push({
+				value: val,
+				label: val
+			});
+			totalTimeOptions.value = arr;
 		};
 
-        const handleChange = () => {
-            totalTimeOptions.value = rawTotalTimeOptions;
+		const handleChange = () => {
+			totalTimeOptions.value = rawTotalTimeOptions;
 		};
 
 		return {
-            tempTimeInput,
+			tempTimeInput,
 			metaPapers,
 			teacherId,
 			createMetaPaperVisible,
@@ -324,8 +340,8 @@ export default {
 			deleteMetaPaper,
 			publishPaper,
 			showPublishModal,
-            handleSearch,
-            handleChange,
+			handleSearch,
+			handleChange
 		};
 	}
 };

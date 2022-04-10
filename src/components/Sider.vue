@@ -1,5 +1,5 @@
 <template>
-    <a-layout-sider collapsible width="100" v-if="route.path != '/login' && route.path != '/register'">
+    <a-layout-sider theme="dark" width="150" v-if="route.path != '/login' && route.path != '/register'" style="border-right: 2px solid #f0f2f5;">
         <a-dropdown>
             <a-avatar style="margin:15px 30px;" :size="40">
                 <template #icon>
@@ -18,19 +18,23 @@
             </template>
         </a-dropdown>
 
-        <a-menu theme="dark" mode="inline">
+        <a-menu mode="inline" theme="dark">
             <a-menu-item key="1">
-                <router-link to="/courses">课程班级</router-link>
+                <!-- <PlayCircleOutlined style="font-size: 17px;margin-right: 5px;"/> -->
+                <router-link to="/courses" style="font-size: 17px;">课程班级</router-link>
             </a-menu-item>
             <a-menu-item key="2" v-if="role==1">
-                <router-link to="/metaPapers">试卷库</router-link>
+                <!-- <SnippetsOutlined /> -->
+                <router-link to="/metaPapers" style="font-size: 17px;">试卷库</router-link>
             </a-menu-item>
             <div v-else>
                 <a-menu-item key="2">
-                    <router-link to="/papers">待做试卷</router-link>
+                    <!-- <AlertOutlined style="font-size: 17px;margin-right: 5px;" /> -->
+                    <router-link to="/papers" style="font-size: 17px;">待做试卷</router-link>
                 </a-menu-item>
                 <a-menu-item key="3">
-                    <router-link to="/records">考试记录</router-link>
+                    <!-- <SnippetsOutlined style="font-size: 17px;margin-right: 5px;"/> -->
+                    <router-link to="/records" style="font-size: 17px;">考试记录</router-link>
                 </a-menu-item>
             </div>
             <!-- <a-menu-item key="4">
@@ -46,7 +50,13 @@ import cookies from "vue-cookies";
 import userApi from "@/api/user";
 import { message } from "ant-design-vue";
 import { useRoute } from "vue-router";
+// import {PlayCircleOutlined, SnippetsOutlined,AlertOutlined } from '@ant-design/icons-vue';
 export default {
+    components:{
+        // PlayCircleOutlined,
+        // SnippetsOutlined,
+        // AlertOutlined
+    },
     watch: {
         $route: {
             handler(route) {

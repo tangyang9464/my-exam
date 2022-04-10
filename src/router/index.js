@@ -10,6 +10,7 @@ import UserCenter from "../views/user/UserCenter.vue";
 import MetaPaper from "../views/paper/teacher/MetaPaper"
 import MetaPaperDetail from "../views/paper/teacher/MetaPaperDetail"
 import SummaryTeacherPaper from "../views/paper/teacher/SummaryTeacherPaper"
+import Problems from "../views/paper/student/Problems"
 import test from "../views/paper/teacher/test"
 import cookies from 'vue-cookies'
 
@@ -23,6 +24,11 @@ const routes = [
     path: "/summaryPaper/:paperId",
     name: "summaryPaper",
     component: SummaryTeacherPaper,
+  },
+  {
+    path: "/papers/:paperId",
+    name: "Problems",
+    component: Problems,
   },
   {
     path: "/metaPaperDetail/:paperId",

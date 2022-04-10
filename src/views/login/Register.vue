@@ -147,13 +147,13 @@ export default defineComponent({
 
 <style>
 /* 背景 */
-.login-container {
+/* .login-container {
     position: absolute;
     width: 30%;
     height: 30%;
     top: 10%;
     left: 30%;
-}
+} */
 
 /* 用户登陆标题 */
 .title {

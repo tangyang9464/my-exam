@@ -67,9 +67,9 @@
                         </a-col>
                     </a-row>
                     <a-row :gutter="10" style="margin-top:5px" v-if="correctStatus[key]!=undefined">
-                        <a-col>
+                        <!-- <a-col>
                             <div>{{key}}.</div>
-                        </a-col>
+                        </a-col> -->
                         <a-col v-if="correctStatus[key]==1">
                             <a-typography-text type="success"> 答案正确</a-typography-text>
                         </a-col>

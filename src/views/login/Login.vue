@@ -89,12 +89,11 @@ export default defineComponent({
 <style>
 /* 背景 */
 .login-container {
-    
     position: absolute;
     width: 30%;
     height: 30%;
-    top: 35%;
-    left: 35%;
+    top: 20%;
+    left: 30%;
 }
 
 
@@ -123,5 +122,6 @@ export default defineComponent({
 /* 输入框内左边距50px */
 .ant-input-affix-wrapper .ant-input:not(:first-child) {
     padding-left: 50px;
+    
 }
 </style>
