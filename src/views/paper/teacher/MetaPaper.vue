@@ -26,15 +26,10 @@
                     <template #renderItem="{ item }">
                         <a-list-item style="border-radius: 4px;padding: 8px 30px;background: #ffffff;margin: 8px 0;">
                             <!-- <a-skeleton avatar :title="false" active> -->
-                            <a-list-item-meta style="margin: auto 8px auto 0;font-size: 25px;" description="结束时间：2019/08/11 12:00:00">
+                            <a-list-item-meta style="margin: auto 8px auto 0;font-size: 25px;" description="结束时间: 2019/08/11 12:00:00">
                                 <template #title>
-                                    <a href="#">{{item.paperName}}</a>
-                                    <router-link v-if="role==0" :to="'/papers/'+item.id">
-                                        <a href="#">{{item.paperName}}</a>
-                                    </router-link>
-
-                                    <router-link v-else :to="'/summaryPaper/'+item.id">
-                                        <a href="#">{{item.publishName}}</a>
+                                    <router-link :to="'/metaPaperDetail/'+item.id">
+                                        <a href="/">{{item.paperName}}</a>
                                     </router-link>
                                 </template>
                                 <template #avatar>
@@ -119,8 +114,8 @@
 
                 <a-modal v-model:visible="publishModalVisible" title="发布试卷" @ok="publishPaper()">
                     <a-form :model="paperInfo" class="login-form" @submit="submit">
-                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发送班级" name="schoolClass">
-                            <a-select v-model:value="publishInfo.roomIds" mode="multiple" style="width: 100%" placeholder="选择发送班级" :options="publishSchoolClass"></a-select>
+                        <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发送课堂" name="schoolClass">
+                            <a-select v-model:value="publishInfo.roomIds" mode="multiple" style="width: 100%" placeholder="选择发送课堂" :options="publishSchoolClass"></a-select>
                         </a-form-item>
                         <a-form-item :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" label="发布名称" name="examName">
                             <a-input v-model:value="publishInfo.publishName"></a-input>

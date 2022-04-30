@@ -78,7 +78,7 @@ export default defineComponent({
     data() {
         return {
             form: {
-                username: "ty",
+                username: "teacher",
                 password: "1234567ty",
             },
         };

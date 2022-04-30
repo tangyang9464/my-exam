@@ -240,6 +240,7 @@ export default {
 					message.error('出错了:' + reason);
 				});
 		},
+		// 获取学生的课堂列表
 		NowRooms() {
 			let params = {
 				studentId: this.userId
@@ -256,6 +257,7 @@ export default {
 					message.error('出错了:' + reason);
 				});
 		},
+		// 获取教师的课堂列表
 		NowTeacherRooms() {
 			let params = {
 				teacherId: this.userId

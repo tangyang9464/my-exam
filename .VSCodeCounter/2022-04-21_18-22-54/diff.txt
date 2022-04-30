@@ -1,0 +1,53 @@
+Date : 2022-04-21 18:22:54
+Directory : d:\Projects\vscode\my-exam-vue
+Total : 14 files,  222 codes, 18 comments, 6 blanks, all 246 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| Vue        |         11 |        215 |         18 |          5 |        238 |
+| JavaScript |          2 |          7 |          0 |          0 |          7 |
+| Markdown   |          1 |          0 |          0 |          1 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                           | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                              |         14 |        222 |         18 |          6 |        246 |
+| src                                                                            |         13 |        222 |         18 |          5 |        245 |
+| src\api                                                                        |          1 |          1 |          0 |          0 |          1 |
+| src\components                                                                 |          1 |          6 |          4 |          0 |         10 |
+| src\router                                                                     |          1 |          6 |          0 |          0 |          6 |
+| src\views                                                                      |         10 |        209 |         14 |          5 |        228 |
+| src\views\course                                                               |          2 |          6 |          2 |         -7 |          1 |
+| src\views\login                                                                |          1 |         -7 |          7 |          0 |          0 |
+| src\views\paper                                                                |          5 |        226 |         -2 |         16 |        240 |
+| src\views\paper\questions                                                      |          1 |        -60 |          0 |         -3 |        -63 |
+| src\views\paper\student                                                        |          2 |        242 |          0 |         17 |        259 |
+| src\views\paper\teacher                                                        |          2 |         44 |         -2 |          2 |         44 |
+| src\views\record                                                               |          1 |         -9 |          0 |         -4 |        -13 |
+| src\views\user                                                                 |          1 |         -7 |          7 |          0 |          0 |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                       | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\Projects\vscode\my-exam-vue\README.md                                       | Markdown   |          0 |          0 |          1 |          1 |
+| d:\Projects\vscode\my-exam-vue\src\api\paper.js                                | JavaScript |          1 |          0 |          0 |          1 |
+| d:\Projects\vscode\my-exam-vue\src\components\Sider.vue                        | Vue        |          6 |          4 |          0 |         10 |
+| d:\Projects\vscode\my-exam-vue\src\router\index.js                             | JavaScript |          6 |          0 |          0 |          6 |
+| d:\Projects\vscode\my-exam-vue\src\views\course\CourseDetail.vue               | Vue        |        -10 |          0 |         -7 |        -17 |
+| d:\Projects\vscode\my-exam-vue\src\views\course\Courses.vue                    | Vue        |         16 |          2 |          0 |         18 |
+| d:\Projects\vscode\my-exam-vue\src\views\login\Register.vue                    | Vue        |         -7 |          7 |          0 |          0 |
+| d:\Projects\vscode\my-exam-vue\src\views\paper\questions\ChoiceType.vue        | Vue        |        -60 |          0 |         -3 |        -63 |
+| d:\Projects\vscode\my-exam-vue\src\views\paper\student\Papers.vue              | Vue        |         23 |          0 |          0 |         23 |
+| d:\Projects\vscode\my-exam-vue\src\views\paper\student\Problems.vue            | Vue        |        219 |          0 |         17 |        236 |
+| d:\Projects\vscode\my-exam-vue\src\views\paper\teacher\MetaPaper.vue           | Vue        |         19 |         -2 |         -1 |         16 |
+| d:\Projects\vscode\my-exam-vue\src\views\paper\teacher\SummaryTeacherPaper.vue | Vue        |         25 |          0 |          3 |         28 |
+| d:\Projects\vscode\my-exam-vue\src\views\record\ExamRecord.vue                 | Vue        |         -9 |          0 |         -4 |        -13 |
+| d:\Projects\vscode\my-exam-vue\src\views\user\UserCenter.vue                   | Vue        |         -7 |          7 |          0 |          0 |
+| Total                                                                          |            |        222 |         18 |          6 |        246 |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

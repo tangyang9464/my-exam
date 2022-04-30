@@ -12,6 +12,7 @@
                     <router-link :to="'/metaPapers'">
                         <a-button size="small">取消</a-button>
                     </router-link>
+
                 </a-col>
             </a-row>
         </a-layout-header>
@@ -29,7 +30,6 @@
                             </template>
                             添加习题
                         </a-button>
-
                         <a-modal centered="true" v-model:visible="visible" title="添加习题" @ok="createQuestion" :width="1000" ok-text="确认" cancel-text="取消">
                             <a-row type="flex" :gutter="[10,20]" id="flexbox" class="my-scroll">
                                 <a-col :span="3" class="my-text-right">
@@ -225,7 +225,6 @@ import { getCurrentInstance, onMounted, defineComponent, ref, reactive, toRefs, 
 import { useRoute, useRouter } from 'vue-router';
 import paperApi from '@/api/paper';
 import Editor from '@tinymce/tinymce-vue';
-
 export default defineComponent({
 	setup() {
 		const { proxy } = getCurrentInstance();
@@ -248,9 +247,9 @@ export default defineComponent({
 			language: 'zh_CN',
 			height: 150,
 			// width: 600,
-			plugins: 'link lists image code table wordcount',
+			plugins: 'link lists code table wordcount blankbracket',
 			toolbar:
-				'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
+				'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink code | removeformat',
 			// 此处为图片上传处理函数
 			images_upload_handler: (blobInfo, success, failure) => {
 				this.handleImgUpload(blobInfo, success, failure);
@@ -261,7 +260,7 @@ export default defineComponent({
 		};
 		const maxQuestionNumber = ref(0);
 
-        const options = ref([
+		const options = ref([
 			{
 				value: 0,
 				label: '单选'
@@ -281,9 +280,8 @@ export default defineComponent({
 			questionType: 1,
 			options: [],
 			score: 0,
-			correctAnswer: undefined,
+			correctAnswer: undefined
 		});
-		
 
 		const onCheckAllChange = e => {
 			Object.assign(state, {
@@ -299,7 +297,7 @@ export default defineComponent({
 		watch(
 			() => state.checkedList,
 			val => {
-                console.log(val);
+				console.log(val);
 				state.indeterminate = !!val.length && val.length < metaPaper.value.questions.length;
 				state.checkAll = val.length === metaPaper.value.questions.length;
 			}
@@ -367,7 +365,7 @@ export default defineComponent({
 				metaPaper.value.questionNumber--;
 				metaPaper.value.totalScore -= question.score;
 			}
-            state.checkedList = []; 
+			state.checkedList = [];
 		};
 		const updateMetaPaper = () => {
 			paperApi
@@ -397,7 +395,7 @@ export default defineComponent({
 			editorInit,
 			maxQuestionNumber,
 			tinymceScriptSrc,
-            options,
+			options,
 			...toRefs(state),
 			onCheckAllChange,
 			showModal,
@@ -434,7 +432,7 @@ export default defineComponent({
 	line-height: 44px !important;
 }
 .my-scroll {
-    height: 520px;
+	height: 520px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
