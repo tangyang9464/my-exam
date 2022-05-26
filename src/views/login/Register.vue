@@ -27,9 +27,9 @@
                         </a-input-password>
                     </a-form-item>
                     <a-form-item :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" label="角色" name="role" :rules="[{ required: true, message: '请选择角色!' }]">
-                        <a-select v-model:value="form.role" defaultActiveFirstOption="true">
-                            <a-select-option value="0">学生</a-select-option>
-                            <a-select-option value="1">老师</a-select-option>
+                        <a-select :options="options" v-model:value="form.role" defaultActiveFirstOption="true">
+                            <!-- <a-select-option value="0">学生</a-select-option>
+                            <a-select-option value="1">老师</a-select-option> -->
                         </a-select>
                     </a-form-item>
                     <a-form-item :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" label="学号">
@@ -129,17 +129,24 @@ export default defineComponent({
         return {
             fileList:[],
             loading:false,
-            imageUrl:'/default_avatar.png',
+            imageUrl:'/default_avatar.jpg',
             form: {
                 avatar:'default_avatar.jpg',
                 number: "",
-                username: "1",
-                displayName: "1",
-                password: "1",
+                username: "",
+                displayName: "",
+                password: "",
                 role: 0,
                 school: "",
                 email: "",
             },
+            options:[{
+                value:0,
+                label:'学生'
+            },{
+                value:1,
+                label:'教师'
+            }]
         };
     },
 });

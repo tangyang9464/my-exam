@@ -30,7 +30,7 @@
                             <!-- 多选 -->
                             <a-checkbox-group v-if="question.questionType == 1">
                                 <div v-for="option,key2 in question.options" :key="key2" class="radioStyle">
-                                    <span class="ant-checkbox" :class="{'ant-checkbox-checked':isExist(studentAnswers[key2],key2)}">
+                                    <span class="ant-checkbox" :class="{'ant-checkbox-checked':isExist(studentAnswers[key],key2)}">
                                         <span class="ant-checkbox-inner"></span>
                                     </span>
                                     <span>
@@ -70,13 +70,13 @@
                         <!-- <a-col>
                             <div>{{key}}.</div>
                         </a-col> -->
-                        <a-col v-if="correctStatus[key]==1">
+                        <a-col v-if="correctStatus[key]==0">
                             <a-typography-text type="success"> 答案正确</a-typography-text>
                         </a-col>
                         <a-col v-else>
                             <a-typography-text type="danger"> 答案错误</a-typography-text>
                         </a-col>
-                        <a-col v-if="correctStatus[key]!=1">
+                        <a-col v-if="correctStatus[key]==1">
                             <a-typography-text type="success">正确答案：{{digitToLetter(question.correctAnswer)}}</a-typography-text>
                         </a-col>
                     </a-row>

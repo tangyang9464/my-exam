@@ -25,9 +25,9 @@
                     <a-tabs>
                         <a-tab-pane key="1" tab="试卷">
                         </a-tab-pane>
-                        <a-tab-pane key="2" tab="成员管理" v-if="role==1">
-                        </a-tab-pane>
-                        <a-tab-pane key="2" tab="" v-if="role==0">
+                        <!-- <a-tab-pane key="2" tab="成员管理" v-if="role==1">
+                        </a-tab-pane> -->
+                        <a-tab-pane key="2" tab="">
                         </a-tab-pane>
                     </a-tabs>
                 </a-row>

@@ -32,7 +32,7 @@
                                 <div class="label_3XKMT">正确率</div>
                             </a-col>
                             <a-col style="margin:auto 0;">
-                                <span class="value_2e-rV">{{(teacherPaper.correctQuestionNumber /(totalQuestionNumber * totalStudentNumber)).toFixed(2)*100}}%</span>
+                                <span class="value_2e-rV">{{(totalStudentNumber == 0 ? 0 : (teacherPaper.correctQuestionNumber /(totalQuestionNumber * totalStudentNumber)).toFixed(2)*100 + '%')}}</span>
                             </a-col>
                         </a-row>
 
@@ -41,7 +41,7 @@
                                 <div class="label_3XKMT">平均得分</div>
                             </a-col>
                             <a-col style="margin:auto 0;">
-                                <span class="value_2e-rV">{{ teacherPaper.allScore / totalStudentNumber }}分</span>
+                                <span class="value_2e-rV">{{ totalStudentNumber == 0 ? 0 : teacherPaper.allScore / totalStudentNumber }}分</span>
                             </a-col>
                         </a-row>
                     </a-col>
